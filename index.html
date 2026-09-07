@@ -19,11 +19,11 @@
         <span class="brand-text">KAIROS<small>ESTÉTICA AUTOMOTIVA</small></span>
       </a>
 
-      <button class="menu-btn" aria-label="Abrir menu" aria-expanded="false">
+      <button class="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-navigation">
         <span></span><span></span><span></span>
       </button>
 
-      <nav class="nav-links" aria-label="Navegação principal">
+      <nav id="primary-navigation" class="nav-links" aria-label="Navegação principal">
         <a href="#inicio">Início</a>
         <a href="#servicos">Serviços</a>
         <a href="#diferenciais">Diferenciais</a>
@@ -63,7 +63,10 @@
 
         <div class="hero-media reveal delay">
           <div class="media-frame">
-            <img src="kairos-car.png" alt="Carro preto em ambiente de estética automotiva premium">
+            <picture>
+              <source srcset="kairos-car.webp" type="image/webp">
+              <img src="kairos-car.png" alt="Carro preto em ambiente de estética automotiva premium" width="1536" height="1024" fetchpriority="high">
+            </picture>
             <div class="media-fade"></div>
           </div>
           <div class="media-tag">DETAIL<br>MATTERS.</div>

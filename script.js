@@ -1,32 +1,51 @@
 const menuBtn = document.querySelector(".menu-btn");
 const nav = document.querySelector(".nav-links");
 
-menuBtn?.addEventListener("click", () => {
-  const open = nav.classList.toggle("open");
-  menuBtn.setAttribute("aria-expanded", String(open));
-});
+if (menuBtn && nav) {
+  const setMenuOpen = (open, restoreFocus = false) => {
+    nav.classList.toggle("open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+    if (restoreFocus) menuBtn.focus();
+  };
 
-document.querySelectorAll(".nav-links a").forEach(link => {
-  link.addEventListener("click", () => {
-    nav.classList.remove("open");
-    menuBtn?.setAttribute("aria-expanded", "false");
+  menuBtn.addEventListener("click", () => {
+    setMenuOpen(!nav.classList.contains("open"));
   });
-});
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
+  nav.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      const restoreFocus = nav.classList.contains("open") && nav.contains(document.activeElement);
+      setMenuOpen(false, restoreFocus);
+    });
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && nav.classList.contains("open")) {
+      setMenuOpen(false, nav.contains(document.activeElement));
     }
   });
-}, { threshold: 0.12 });
+}
 
-document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+// Content stays visible unless a supported observer starts a finite animation.
+if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+}
 
 const header = document.querySelector(".site-header");
 window.addEventListener("scroll", () => {
-  header.style.background = window.scrollY > 40
-    ? "rgba(5,7,10,.93)"
-    : "rgba(5,7,10,.72)";
+  if (header) {
+    header.style.background = window.scrollY > 40
+      ? "rgba(5,7,10,.93)"
+      : "rgba(5,7,10,.72)";
+  }
 });
